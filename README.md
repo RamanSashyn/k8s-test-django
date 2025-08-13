@@ -64,8 +64,16 @@ $ docker compose build web
 Аналогичным образом можно удалять библиотеки из зависимостей.
 
 <a name="env-variables"></a>
-## Переменные окружения
+## Create Kubernetes Secret (local)
+```
+kubectl create secret generic django-env --from-literal=SECRET_KEY="<put-your-secret-key>" --from-literal=DATABASE_URL="postgres://<user>:<pass>@<host>:<port>/<db>"
+```
 
+### Apply manifests
+```
+kubectl apply -f kubernetes/
+```
+## Переменные окружения
 Образ с Django считывает настройки из переменных окружения:
 
 `SECRET_KEY` -- обязательная секретная настройка Django. Это соль для генерации хэшей. Значение может быть любым, важно лишь, чтобы оно никому не было известно. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#secret-key).
