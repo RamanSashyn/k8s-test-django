@@ -88,6 +88,12 @@ kubectl rollout status deploy/django
 ```
 4) Прописать домен в hosts
 Windows: C:\Windows\System32\drivers\etc\hosts
+
+## Деплой CronJob
+```bash
+kubectl apply -f kubernetes/clearsessions-cronjob.yaml
+kubectl get cronjob
+```
 ## Переменные окружения
 Образ с Django считывает настройки из переменных окружения:
 
