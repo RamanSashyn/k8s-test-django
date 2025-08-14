@@ -94,6 +94,11 @@ Windows: C:\Windows\System32\drivers\etc\hosts
 kubectl apply -f kubernetes/clearsessions-cronjob.yaml
 kubectl get cronjob
 ```
+## Миграция 
+```bash
+kubectl create -f migrate-job.yaml
+kubectl logs job/"имя миграции" -c migrate
+```
 ## Переменные окружения
 Образ с Django считывает настройки из переменных окружения:
 

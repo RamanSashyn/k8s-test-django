@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: django-migrate-
+  labels:
+    app.kubernetes.io/name: django
+    app.kubernetes.io/component: maintenance
+spec:
+  ttlSecondsAfterFinished: 3600
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: django_app:latest
+          imagePullPolicy: IfNotPresent
+          workingDir: /webapp/src
+          command: ["python", "manage.py", "migrate", "--noinput"]
+          envFrom:
+            - secretRef:
+                name: django-env
+          env:
+            - name: DEBUG
+              value: "False"
