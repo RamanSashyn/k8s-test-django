@@ -64,15 +64,30 @@ $ docker compose build web
 Аналогичным образом можно удалять библиотеки из зависимостей.
 
 <a name="env-variables"></a>
-## Create Kubernetes Secret (local)
-```
-kubectl create secret generic django-env --from-literal=SECRET_KEY="<put-your-secret-key>" --from-literal=DATABASE_URL="postgres://<user>:<pass>@<host>:<port>/<db>"
-```
-
 ### Apply manifests
 ```
 kubectl apply -f kubernetes/
 ```
+
+## Развёртывание в minikube через Ingress
+1) Поднять ingress-контроллер
+```bash
+minikube start
+minikube addons enable ingress
+```
+2) Создать Secret с переменными окружения
+```
+kubectl create secret generic django-env --from-literal=SECRET_KEY="<put-your-secret-key>" --from-literal=DATABASE_URL="postgres://<user>:<pass>@<host>:<port>/<db>"
+```
+3) Задеплоить манифесты
+```bash
+kubectl apply -f kubernetes/deployment.yaml
+kubectl apply -f kubernetes/service.yaml
+kubectl apply -f kubernetes/ingress.yaml
+kubectl rollout status deploy/django
+```
+4) Прописать домен в hosts
+Windows: C:\Windows\System32\drivers\etc\hosts
 ## Переменные окружения
 Образ с Django считывает настройки из переменных окружения:
 
