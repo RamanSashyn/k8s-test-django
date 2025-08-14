@@ -4,7 +4,12 @@ metadata:
   name: django-clearsessions
 spec:
   schedule: "0 3 * * *"
+  startingDeadlineSeconds: 900
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
+    ttlSecondsAfterFinished: 86400
+    backoffLimit: 0
     spec:
       template:
         spec:
