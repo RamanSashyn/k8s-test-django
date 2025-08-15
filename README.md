@@ -64,10 +64,6 @@ $ docker compose build web
 Аналогичным образом можно удалять библиотеки из зависимостей.
 
 <a name="env-variables"></a>
-### Apply manifests
-```
-kubectl apply -f kubernetes/
-```
 
 ## Развёртывание в minikube через Ingress
 1) Поднять ingress-контроллер
@@ -75,19 +71,37 @@ kubectl apply -f kubernetes/
 minikube start
 minikube addons enable ingress
 ```
-2) Создать Secret с переменными окружения
+2) Сборка образа Django внутрь Minikube
+```bash
+minikube image build -t django_app:latest . 
+```
+3) Создать Secret с переменными окружения
+Вариант А (внешняя БД на хосте):
 ```
 kubectl create secret generic django-env --from-literal=SECRET_KEY="<put-your-secret-key>" --from-literal=DATABASE_URL="postgres://<user>:<pass>@<host>:<port>/<db>"
 ```
-3) Задеплоить манифесты
+Вариант Б (БД внутри кластера, если ставили через Helm Bitnami):
+```angular2html
+kubectl create secret generic django-env `
+  --from-literal=SECRET_KEY=dev `
+  --from-literal=DATABASE_URL="postgres://test_k8s:Password@pg-postgresql.db.svc.cluster.local:5432/test_k8s"
+```
+4) Задеплоить манифесты
 ```bash
 kubectl apply -f kubernetes/deployment.yaml
 kubectl apply -f kubernetes/service.yaml
 kubectl apply -f kubernetes/ingress.yaml
 kubectl rollout status deploy/django
 ```
-4) Прописать домен в hosts
+5) Прописать домен в hosts
 Windows: C:\Windows\System32\drivers\etc\hosts
+```angular2html
+127.0.0.1 star-burger.test
+```
+Запустите туннель (держите окно открытым):
+```powershell
+minikube tunnel
+```
 
 ## Деплой CronJob
 ```bash
